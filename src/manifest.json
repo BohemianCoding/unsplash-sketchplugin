@@ -4,16 +4,34 @@
   "bundleVersion": 1,
   "icon": "icon.png",
   "suppliesData" : true,
-  "commands": [
-    {
+  "commands": [{
       "name": "View Photo on Unsplash",
       "identifier": "imageDetails",
       "script": "DataProvider.js",
       "handler": {
           "run": "onImageDetails"
       }
-    },
-    {
+    }, {
+      "name": "New Source...",
+      "identifier": "SetSource",
+      "script": "Settings.js",
+      "handler": "onCollectionSetup"
+    }, {
+      "name": "Restore default",
+      "identifier": "RestoreSource",
+      "script": "Settings.js",
+      "handler": "onCollectionRestore"
+    }, {
+      "name": "New Key...",
+      "identifier": "SetAPIKEY",
+      "script": "Settings.js",
+      "handler": "onSetNewApiKey"
+    }, {
+      "name": "Restore default",
+      "identifier": "RestoreAPIKEY",
+      "script": "Settings.js",
+      "handler": "onRestoreApiKey"
+    }, {
       "script" : "DataProvider.js",
       "handlers" : {
         "actions" : {
@@ -23,12 +41,22 @@
           "SearchPhoto" : "onSearchPhoto"
         }
       }
-    }
-  ],
+    }],
   "menu": {
     "title": "Unsplash",
     "items": [
-        "imageDetails"
+        "imageDetails",
+        "getCurrentCollectionID",
+        {
+          "title": "Settings",
+          "items": [{
+              "title": "Random Source",
+              "items": ["SetSource", "RestoreSource"]
+            }, {
+              "title": "API KEY",
+              "items": ["SetAPIKEY", "RestoreAPIKEY"]
+            }]
+        }
     ]
   }
 }

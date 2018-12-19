@@ -4,10 +4,12 @@ const util = require('util')
 const fs = require('@skpm/fs')
 const sketch = require('sketch')
 
-const API_KEY = 'bfd993ac8c14516588069b3fc664b216d0e20fb9b9fa35aa06fcc3ba6e0bc703'
+const { getApiKey, getDefaultCollection } = require('./utils')
+
+const API_KEY = getApiKey()
 const API_ENDPOINT = 'https://api.unsplash.com'
 const action = '/photos/random'
-const collectionId = 317099 // Unsplash's curated collection
+
 const apiOptions = {
   'headers': {
     'app-pragma': 'no-cache'
@@ -41,8 +43,8 @@ export function onSupplyRandomPhoto (context) {
 
 export function onSearchPhoto (context) {
   let dataKey = context.data.key
-  let searchTerm = UI.getStringFromUser('Search Unsplash for…', 'People').replace(' ', '-').toLowerCase()
-  if (searchTerm != 'null') {
+  let searchTerm = UI.getStringFromUser('Search Unsplash for…', 'People').replace(/\s+/, '-').toLowerCase()
+  if (searchTerm !== 'null') {
     const items = util.toArray(context.data.items).map(sketch.fromNative)
     items.forEach((item, index) => setImageFor(item, index, dataKey, searchTerm))
   }
@@ -100,10 +102,11 @@ function setImageFor (item, index, dataKey, searchTerm) {
   if (searchTerm) {
     url += '&query=' + searchTerm
   } else {
-    url += '&collections=' + collectionId
+    url += '&collections=' + getDefaultCollection()
   }
 
   UI.message('🕑 Downloading…')
+
   fetch(url, apiOptions)
     .then(response => response.json())
     .then(json => {
@@ -130,7 +133,7 @@ function process (data, dataKey, index, item) {
     DataSupplier.supplyDataAtIndex(dataKey, imagePath, index)
 
     // store where the image comes from, but only if this is a regular layer
-    if (item.type != 'DataOverride') {
+    if (item.type !== 'DataOverride') {
       Settings.setLayerSettingForKey(item, SETTING_KEY, data.id)
     }
 

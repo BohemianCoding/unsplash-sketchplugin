@@ -2,13 +2,17 @@
 unsplash.sketchplugin
 *.zip
 
-# npm
+# npm - yarn
 node_modules
 .npm
 npm-debug.log
+yarn.lock
 
 # mac
 .DS_Store
 
 # WebStorm
 .idea
+
+# Visual Studio Code
+.vscode
